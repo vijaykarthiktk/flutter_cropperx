@@ -292,20 +292,23 @@ class _OverlayFrame extends CustomClipper<Path> {
   });
 
   @override
+  
   Path getClip(Size size) {
     double _height = aspectRatio >= 1 ? size.width / aspectRatio : size.height;
     double _width = aspectRatio <= 1 ? size.height * aspectRatio : size.width;
 
-    final opening = Path();
+    final path = Path();
+    path.fillType = PathFillType.evenOdd;
+    path.addRect(Rect.fromLTWH(0, 0, size.width, size.height));
     if (isCircle) {
-      opening.addOval(
+      path.addOval(
         Rect.fromCircle(
           center: Offset(size.width / 2, size.height / 2),
           radius: min(_height, _width) / 2,
         ),
       );
     } else {
-      opening.addRect(
+      path.addRect(
         Rect.fromCenter(
           center: Offset(size.width / 2, size.height / 2),
           height: _height,
@@ -314,11 +317,7 @@ class _OverlayFrame extends CustomClipper<Path> {
       );
     }
 
-    return Path.combine(
-      PathOperation.difference,
-      Path()..addRect(Rect.fromLTWH(0, 0, size.width, size.height)),
-      opening..close(),
-    );
+    return path;
   }
 
   @override
